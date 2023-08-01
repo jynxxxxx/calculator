@@ -13,25 +13,46 @@
             <div class="screenBottom"></div>
         </div>
         <div class="buttons"> 
+            <button class="clear" value="clear">C</button>
+            <button class="negative" value="+/-">+/-</button>  
+            <button class="delete" value="delete">&#8592</button>          
+            <button class="operator" value="/">/</button>
             <button class="operand" value="7">7</button>
             <button class="operand" value="8">8</button>
             <button class="operand" value="9">9</button>
-            <button class="negative" value="+/-">+/-</button>
-            <button class="delete" value="delete">&#8592</button>
+            <button class="operator" value="*">*</button>
             <button class="operand" value="4">4</button>
             <button class="operand" value="5">5</button>
             <button class="operand" value="6">6</button>
-            <button class="operator" value="*">*</button>
-            <button class="operator" value="/">/</button>
+            <button class="operator"value="-">-</button>
             <button class="operand" value="1">1</button>
             <button class="operand" value="2">2</button>
             <button class="operand" value="3">3</button>
-            <button class="operator"value="-">-</button>
-            <button class="long equals",  value="equals">=</button>
-            <button class="clear" value="clear">C</button>
-            <button class="operand" value="0">0</button>
-            <button class="operand" id="decimal"  value=".">.</button>
             <button class="operator"value="+">+</button>
+            <button class="operand zero" value="0">0</button>
+            <button class="decimal" id="decimal"  value=".">.</button>
+            <button class="equals" value="equals">=</button>
+        </div>
+
+        <!-- added keyboard keys -->
+        <div class="keyboard">
+            <div class="key operand" data-key="Digit7" value="7"></div>
+            <div class="key operand" data-key="Digit8" value="8"></div>
+            <div class="key operand" data-key="Digit9" value="9"></div>
+            <div class="key delete" data-key="Backspace" value="delete"></div>
+            <div class="key operand" data-key="Digit4" value="4"></div>
+            <div class="key operand" data-key="Digit5" value="5"></div>
+            <div class="key operand" data-key="Digit6" value="6"></div>
+            <div class="key operator" data-key="ShiftDigit8" value="*"></div>
+            <div class="key operator" data-key="Slash" value="/"></div>
+            <div class="key operand" data-key="Digit1" value="1"></div>
+            <div class="key operand" data-key="Digit2" value="2"></div>
+            <div class="key operand" data-key="Digit3" value="3"></div>
+            <div class="key operator" data-key="Minus" value="-"></div>
+            <div class="key equals" data-key="Enter" value="equals"></div>
+            <div class="key operand" data-key="Digit0" value="0"></div>
+            <div class="key" id="period" data-key="Period" data-value="."></div>
+            <div class="key operator" data-key="Equal" value="+"></div>
         </div>
     </div>
     <script src='./script.js' ></script>

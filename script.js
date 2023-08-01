@@ -1,5 +1,7 @@
+// Adjusted event listeners and formulas
+// Created new formulas and event listeners to accommodate keyboard input
 
-//create display
+// Create display
 const display = document.querySelector('.screenTop');
 const answer = document.querySelector('.screenBottom');
 
@@ -9,7 +11,7 @@ let secondValue = "";
 let operatorClicked = 0;
 let operator ="";
 
-//calculation function
+// Calculation function
 function operate(firstValue, secondValue, operator) {
     switch (operator) {
         case '+':
@@ -23,7 +25,7 @@ function operate(firstValue, secondValue, operator) {
     }
 };
 
-//Event lister for +/- button
+// Event lister for +/- button
 const plusMinus = document.querySelector('.negative');
 
 function togglePlusMinus(){
@@ -52,86 +54,74 @@ function togglePlusMinus(){
 plusMinus.addEventListener('click',togglePlusMinus);
 
 
-//Event lister for clear
+// Event listener for clear
 const clear = document.querySelector('.clear');
 clear.addEventListener('click',(e)=>{
     firstValue = "";
     secondValue = "";
     operatorClicked = 0;
     operator = "";
-    display.textContent = 
+    display.textContent = "";
+    decimalReset();
     document.querySelector('.screenTop').innerHTML = "";
     document.querySelector('.screenBottom').innerHTML = "";
 });
 
-//Event listener for backspace
-const backspace = document.querySelector('.delete');
-backspace.addEventListener('click',()=> {
-    if( operator == "") {
-        firstValue = firstValue.slice(0,-1);
-        display.textContent = firstValue;
-    }
-    else if (!operator == "" && secondValue == ""){
-        operator = "";
-        operatorClicked--;
-        display.textContent = firstValue + " " + operator + " " + secondValue;
-    }
-    else {
-        secondValue = secondValue.slice(0,-1);
-        display.textContent = firstValue + " " + operator + " " + secondValue;
-    }
-});
 
-// Event listeners for number
-const numbers = document.querySelectorAll('.operand');
-numbers.forEach((button) => {
-  button.addEventListener('click', (e) => {
-    if (operator === "") {
-        if(firstValue=='' && button.value == '.') {
-            answer.textContent = "";
-            firstValue += '0' + e.target.value;
-            display.textContent = firstValue;
-        }
-        else {
-            answer.textContent = "";
-            firstValue += e.target.value;
-            display.textContent = firstValue;
-        }
-    } else {
-        if(secondValue=='' && button.value == '.') {
-            document.querySelector('.screenBottom').innerHTML = "";
-            secondValue += '0' + e.target.value;
-            display.textContent = firstValue + " " + operator + " " + secondValue;
-        }
-        else {
-            document.querySelector('.screenBottom').innerHTML = "";
-            secondValue += e.target.value;
-            display.textContent = firstValue + " " + operator + " " + secondValue;
-        }
-    }
-  });
-});
 
-//Event listener to disable decimal button after 1 click
+// Event listener to disable decimal button after 1 click
 const decimal = document.querySelector('#decimal');
-
-decimal.addEventListener('click',()=> {
+decimal.addEventListener('click',(e)=> {
+    displayInput(e.target.value);
     document.getElementById('decimal').value='';
+    document.getElementById('period').dataset.value = '';
+
 });
 
-//reset decimal
+// Event listener to disable decimal button after 1 click
+document.addEventListener('keydown', (e) => {
+    if (e.key === ".") { 
+        const periodValue = document.getElementById('period').dataset.value;
+        displayInput(periodValue);
+        document.getElementById('period').dataset.value = '';
+        document.getElementById('decimal').value='';
+    }
+});
+
+
+// Reset decimal
 function decimalReset() {
     document.getElementById('decimal').value='.';
+    document.getElementById('period').dataset.value = '.';
 };
+
+
+// Event listener for operator keys
+document.addEventListener('keydown', (e) => {
+    const key = document.querySelector(`.key.operator[value="${e.key}"]`);
+    const isShift = e.shiftKey;
+
+    if (key || (isShift && e.key === "8")) {
+        e.preventDefault();
+        operatorInput(key.getAttribute('value'));
+        console.log(key.getAttribute('value'));
+    }
+});
 
 
 // Event listener for operator buttons
 const operators = document.querySelectorAll('.operator');
 operators.forEach((button) => {
-button.addEventListener('click', (e) => {
+    button.addEventListener('click', () => {
+    operatorInput(button.value);
+  });
+});
+
+// Function for operator input
+function operatorInput(value) {
     if (operatorClicked === 0) {
         operatorClicked++;
-        operator = e.target.value;
+        operator = value;
         display.textContent = firstValue + " " + operator;
         decimalReset();
       } 
@@ -139,28 +129,124 @@ button.addEventListener('click', (e) => {
         // Perform the calculation
         const result = operate(firstValue, secondValue, operator);
         answer.textContent = result;
-
         // Update values for the next calculation
         firstValue = result.toString();
         secondValue = "";
-        operator = e.target.value;
+        operator = value;
         display.textContent = firstValue + " " + operator;
         decimalReset();
       }
-    });
+    };
+
+
+// Event listeners for enter key
+document.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        equals();
+    }
 });
 
 // Event listener for equal button
-const equal = document.querySelector('.equals')
-equal.addEventListener('click', (e) => {
+const equal = document.querySelector('.equals');
+equal.addEventListener('click', equals);
+
+// Equal function
+function equals(input) {
     // Perform the calculation
     const result = operate(firstValue, secondValue, operator);
     answer.textContent = result;
 
-    // reset everything 
+    // Reset everything 
     firstValue = "";
     secondValue = "";
     operator = "";
     operatorClicked = 0;
     decimalReset();
+};
+
+// Event listeners for backspace key
+document.addEventListener('keydown', (e) => {
+    if (e.key === "Backspace") {
+        backSpace();
+    }
 });
+
+//Event listener for backspace button
+const backspace = document.querySelector('.delete');
+backspace.addEventListener('click', backSpace);
+
+function backSpace(input) {
+if( operator == "") {
+        if (firstValue[firstValue.length - 1] == ".") {
+            firstValue = firstValue.slice(0,-1);
+            display.textContent = firstValue;
+            decimalReset();
+        }
+        else {
+            firstValue = firstValue.slice(0,-1);
+            display.textContent = firstValue;
+        }
+    }
+    else if (!operator == "" && secondValue == ""){
+        operator = "";
+        operatorClicked--;
+        display.textContent = firstValue + " " + operator + " " + secondValue;
+    }
+    else {
+        if (secondValue[secondValue.length - 1] == ".") {
+            secondValue = secondValue.slice(0,-1);
+            display.textContent = firstValue + " " + operator + " " + secondValue;
+            decimalReset();
+        }
+        else {
+            secondValue = secondValue.slice(0,-1);
+            display.textContent = firstValue + " " + operator + " " + secondValue;
+        }
+    }
+};
+
+//Event listeners for operand buttons
+const numbers = document.querySelectorAll('.operand');
+numbers.forEach((button) => {
+    button.addEventListener('click', (e) => {
+    displayInput(e.target.value)
+  });
+});
+
+
+// Event listeners for operand keys
+document.addEventListener('keydown', (e) => {
+    const key = document.querySelector(`.key.operand[data-key="${e.code}"]`);
+    const isShift = e.shiftKey;
+    if (key && !isShift) {
+        e.preventDefault();
+        displayInput(key.getAttribute('value'));
+    }
+});
+
+
+// Function to handle both keyboard and button input
+function displayInput(input) {
+  if (operator === "") {
+    if (firstValue === "" && input === ".") {
+      answer.textContent = "";
+      firstValue += "0" + input;
+      display.textContent = firstValue;
+    } else {
+      answer.textContent = "";
+      firstValue += input;
+      display.textContent = firstValue;
+    }
+  } else {
+    if (secondValue === "" && input === ".") {
+      document.querySelector('.screenBottom').innerHTML = "";
+      secondValue += "0" + input;
+      display.textContent = firstValue + " " + operator + " " + secondValue;
+    } else {
+      document.querySelector('.screenBottom').innerHTML = "";
+      secondValue += input;
+      display.textContent = firstValue + " " + operator + " " + secondValue;
+    }
+  }
+}
