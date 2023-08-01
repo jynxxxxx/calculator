@@ -1,5 +1,9 @@
-// Adjusted event listeners and formulas
-// Created new formulas and event listeners to accommodate keyboard input
+// Adjust event listeners and formulas
+// Create new formulas and event listeners to accommodate keyboard input
+
+// Add snarky comments for operate errors
+
+// Adjust result to fit screenBottom
 
 // Create display
 const display = document.querySelector('.screenTop');
@@ -15,13 +19,40 @@ let operator ="";
 function operate(firstValue, secondValue, operator) {
     switch (operator) {
         case '+':
-            return +firstValue + +secondValue;
+            if (secondValue == ""){
+                alert("Gotta add something dumbass, lol")
+            }
+            else {
+                return +firstValue + +secondValue;
+            };
+            break;
         case '-':
-            return +firstValue - +secondValue;
+            if (secondValue == ""){
+                alert("Gotta subtract something dumbass, lol")
+            }
+            else {
+                return +firstValue - +secondValue;
+            };
+            break;
         case '*':
-            return +firstValue * +secondValue;
+            if (secondValue == ""){
+                alert("Gotta mulitply by something dumbass, lol")
+            }
+            else {
+                return +firstValue * +secondValue;
+            };
+            break;
         case '/':
-            return +firstValue / +secondValue;
+            if (secondValue == ""){
+                alert("Gotta divide by something dumbass, lol")
+            }
+            else if (secondValue == 0) {
+                alert("Everyone has the right to be stupid, but you seem to be abusing that privilege." )
+            }
+            else {
+                return +firstValue / +secondValue;
+            };
+            break;
     }
 };
 
@@ -128,9 +159,20 @@ function operatorInput(value) {
     else {
         // Perform the calculation
         const result = operate(firstValue, secondValue, operator);
-        answer.textContent = result;
+        let formattedResult;
+
+        // Check if the result is greater than 16 characters before a decimal and limit display
+        if (Math.abs(result) >= 1e16 || (Math.abs(result) >= 1 && Math.abs(result) < 1e-16)) {
+            formattedResult = result.toExponential(10);
+        } 
+        else {
+            formattedResult = result.toString().slice(0, 16);
+        }
+
+        answer.textContent = formattedResult;
+
         // Update values for the next calculation
-        firstValue = result.toString();
+        firstValue = formattedResult;
         secondValue = "";
         operator = value;
         display.textContent = firstValue + " " + operator;
@@ -155,7 +197,17 @@ equal.addEventListener('click', equals);
 function equals(input) {
     // Perform the calculation
     const result = operate(firstValue, secondValue, operator);
-    answer.textContent = result;
+    let formattedResult;
+
+    // Check if the result is greater than 16 characters before a decimal and limit display
+    if (Math.abs(result) >= 1e16 || (Math.abs(result) >= 1 && Math.abs(result) < 1e-16)) {
+        formattedResult = result.toExponential(10);
+    } 
+    else {
+        formattedResult = result.toString().slice(0, 16);
+    }
+
+        answer.textContent = formattedResult;
 
     // Reset everything 
     firstValue = "";
